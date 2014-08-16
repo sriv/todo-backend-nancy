@@ -14,52 +14,70 @@ namespace todo_backend_nancy
         public TodoModule(TodoRepository repo)
         {
             this.repo = repo;
-            this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("Access-Control-Allow-Origin", "*")
-                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type")
-                .WithHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"));
+            this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("access-control-allow-origin", "*")
+                .WithHeader("access-control-allow-headers", "Accept, Origin, Content-type"));
 
-            Get["/"] = _ => Response.AsRedirect("~/todos");
+            Get["/"] = GetTodos;
 
             Get["/todos"] = GetTodos;
 
-            Get["/todo/{order}"] = _ => GetTodo(_.order);
+            Get["/todo/{id}"] = _ => GetTodo(_.id);
 
-            Patch["/todo/{order}"] = UpdateTodo;
+            Patch["/todo/{id}"] = UpdateTodo;
 
             Post["/"] = PostTodo;
 
-            Options["/"] = _ => _;
+            Options["/"] = _ => Negotiate.WithHeader("access-control-allow-methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
+            
+            Options["/todo/{id}"] = _ => Negotiate.WithHeader("access-control-allow-methods", "GET,HEAD,DELETE,OPTIONS,PATCH");
 
-            Delete["/"] = ClearTodo;
+            Delete["/"] = ClearTodos;
+
+            Delete["/todo/{id}"] = ClearTodo;
         }
 
-        private dynamic ClearTodo(dynamic arg)
+        private dynamic ClearTodos(dynamic parameters)
         {
             repo.Clear();
             return HttpStatusCode.OK;
         }
 
-        public dynamic GetTodos(dynamic parameters)
+        private dynamic ClearTodo(dynamic parameters)
+        {
+            repo.Delete(parameters.id);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic GetTodos(dynamic parameters)
         {
             return repo.All();
         }
 
-        public dynamic GetTodo(int order)
+        private dynamic GetTodo(int order)
         {
             return repo.Get(order);
         }
 
-        public dynamic PostTodo(dynamic parameters)
+        private dynamic PostTodo(dynamic parameters)
         {
             var todo = repo.Add(this.Bind<Todo>(), Context.Request.Url.SiteBase);
             return Negotiate.WithModel(todo)
                 .WithStatusCode(HttpStatusCode.Created);
         }
 
-        public dynamic UpdateTodo(dynamic parameters)
+        private dynamic UpdateTodo(dynamic parameters)
         {
-            var todo = repo.Update(this.Bind<Todo>());
-            return Negotiate.WithModel(todo)
+            var todo = repo.Get(parameters.id) as Todo;
+            // TODO : need to figure out a good way of binding parameter updates
+            var update = this.Bind<Todo>();
+            if (!string.IsNullOrEmpty(update.Title))
+                todo.Title = update.Title;
+            if (update.Order.HasValue)
+                todo.Order = update.Order.Value;
+            if (update.Completed.HasValue)
+                todo.Completed = update.Completed.Value;
+            repo.Update(todo);
+            return Negotiate.WithModel(repo.Get(parameters.id) as Todo)
                 .WithStatusCode(HttpStatusCode.Created);
         }
     }
