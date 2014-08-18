@@ -60,7 +60,7 @@ namespace todo_backend_nancy
 
         private dynamic PostTodo(dynamic parameters)
         {
-            var todo = repo.Add(this.Bind<Todo>(), Context.Request.Url.SiteBase);
+            var todo = repo.Add(this.Bind<Todo>(), Context.Request.Url.HostName);
             return Negotiate.WithModel(todo)
                 .WithStatusCode(HttpStatusCode.Created);
         }
