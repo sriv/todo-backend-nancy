@@ -1,8 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-# SharpDevelop 5.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo_nancy_aspnet", "todo_nancy_aspnet\todo_nancy_aspnet.csproj", "{78B09F89-D59E-4E74-931D-D4BB3ADC6410}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo_backend_nancy", "todo_backend_nancy.csproj", "{B7BA6AB8-DAF1-48DF-9BD1-49DEA48B97F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,9 +11,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{78B09F89-D59E-4E74-931D-D4BB3ADC6410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78B09F89-D59E-4E74-931D-D4BB3ADC6410}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78B09F89-D59E-4E74-931D-D4BB3ADC6410}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78B09F89-D59E-4E74-931D-D4BB3ADC6410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7BA6AB8-DAF1-48DF-9BD1-49DEA48B97F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7BA6AB8-DAF1-48DF-9BD1-49DEA48B97F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7BA6AB8-DAF1-48DF-9BD1-49DEA48B97F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7BA6AB8-DAF1-48DF-9BD1-49DEA48B97F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
