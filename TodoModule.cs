@@ -14,8 +14,8 @@ namespace todo_backend_nancy
         public TodoModule(TodoRepository repo)
         {
             this.repo = repo;
-            this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("access-control-allow-origin", "*")
-                .WithHeader("access-control-allow-headers", "Accept, Origin, Content-type"));
+            this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("Access-Control-Allow-Origin", "*")
+                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type"));
 
             Get["/"] = GetTodos;
 
@@ -27,11 +27,11 @@ namespace todo_backend_nancy
 
             Post["/"] = PostTodo;
 
-            Options["/"] = _ => Negotiate.WithHeader("access-control-allow-methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
+            Options["/"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
 
-            Options["/todos"] = _ => Negotiate.WithHeader("access-control-allow-methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
+            Options["/todos"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
             
-            Options["/todo/{id}"] = _ => Negotiate.WithHeader("access-control-allow-methods", "GET,HEAD,DELETE,OPTIONS,PATCH");
+            Options["/todo/{id}"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,DELETE,OPTIONS,PATCH");
 
             Delete["/"] = ClearTodos;
 
