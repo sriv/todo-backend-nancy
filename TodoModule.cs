@@ -11,12 +11,12 @@ namespace todo_backend_nancy
     {
         private TodoRepository repo;
 
+        private Tuple<string, string>[] CorsHeaders = { Tuple.Create("Access-Control-Allow-Origin", "*"), 
+                                                        Tuple.Create("Access-Control-Allow-Headers", "Accept, Origin, Content-type"),
+                                                        Tuple.Create("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")};
         public TodoModule(TodoRepository repo)
         {
             this.repo = repo;
-            this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("Access-Control-Allow-Origin", "*")
-                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type")
-                .WithHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"));
 
             Get["/"] = GetTodos;
 
@@ -28,9 +28,9 @@ namespace todo_backend_nancy
 
             Post["/"] = PostTodo;
 
-            Options["/"] = _ => _;
+            Options["/"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
-            Options["/todos"] = _ => _;
+            Options["/todos"] = _ => Negotiate.WithHeaders(CorsHeaders);
             
             Delete["/"] = ClearTodos;
 
@@ -40,30 +40,31 @@ namespace todo_backend_nancy
         private dynamic ClearTodos(dynamic parameters)
         {
             repo.Clear();
-            return HttpStatusCode.OK;
+            return Negotiate.WithHeaders(CorsHeaders).WithStatusCode(HttpStatusCode.OK);
         }
 
         private dynamic ClearTodo(dynamic parameters)
         {
             repo.Delete(parameters.id);
-            return HttpStatusCode.OK;
+            return Negotiate.WithHeaders(CorsHeaders).WithStatusCode(HttpStatusCode.OK);
         }
 
         private dynamic GetTodos(dynamic parameters)
         {
-            return repo.All();
+            return Negotiate.WithHeaders(CorsHeaders).WithModel(repo.All());
         }
 
         private dynamic GetTodo(int order)
         {
-            return repo.Get(order);
+            return Negotiate.WithHeaders(CorsHeaders).WithModel(repo.Get(order));
         }
 
         private dynamic PostTodo(dynamic parameters)
         {
             var todo = repo.Add(this.Bind<Todo>(), Context.Request.Url.HostName);
             return Negotiate.WithModel(todo)
-                .WithStatusCode(HttpStatusCode.Created);
+                .WithStatusCode(HttpStatusCode.Created)
+                .WithHeaders(CorsHeaders);
         }
 
         private dynamic UpdateTodo(dynamic parameters)
@@ -79,7 +80,7 @@ namespace todo_backend_nancy
                 todo.Completed = update.Completed.Value;
             repo.Update(todo);
             return Negotiate.WithModel(repo.Get(parameters.id) as Todo)
-                .WithStatusCode(HttpStatusCode.Created);
+                .WithStatusCode(HttpStatusCode.Created).WithHeaders(CorsHeaders);
         }
     }
 }
