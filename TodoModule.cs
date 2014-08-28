@@ -15,7 +15,8 @@ namespace todo_backend_nancy
         {
             this.repo = repo;
             this.After.AddItemToEndOfPipeline(x => x.Response.WithHeader("Access-Control-Allow-Origin", "*")
-                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type"));
+                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type")
+                .WithHeader("Access-Control-Allow-Method", "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"));
 
             Get["/"] = GetTodos;
 
@@ -27,12 +28,10 @@ namespace todo_backend_nancy
 
             Post["/"] = PostTodo;
 
-            Options["/"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
+            Options["/"] = _ => _;
 
-            Options["/todos"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,POST,DELETE,OPTIONS,PUT");
+            Options["/todos"] = _ => _;
             
-            Options["/todo/{id}"] = _ => Negotiate.WithHeader("Access-Control-Allow-Method", "GET,HEAD,DELETE,OPTIONS,PATCH");
-
             Delete["/"] = ClearTodos;
 
             Delete["/todo/{id}"] = ClearTodo;
