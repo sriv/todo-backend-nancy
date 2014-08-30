@@ -22,7 +22,7 @@ namespace todo_backend_nancy
 
             Get["/todos"] = GetTodos;
 
-            Get["/todo/{id}"] = _ => GetTodo(_.id);
+            Get["/todo/{id}"] = GetTodo;
 
             Patch["/todo/{id}"] = UpdateTodo;
 
@@ -31,8 +31,10 @@ namespace todo_backend_nancy
             Options["/"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
             Options["/todos"] = _ => Negotiate.WithHeaders(CorsHeaders);
-            
+
             Delete["/"] = ClearTodos;
+
+            Delete["/todos"] = ClearTodos;
 
             Delete["/todo/{id}"] = ClearTodo;
         }
@@ -54,14 +56,15 @@ namespace todo_backend_nancy
             return Negotiate.WithHeaders(CorsHeaders).WithModel(repo.All());
         }
 
-        private dynamic GetTodo(int order)
+        private dynamic GetTodo(dynamic parameters)
         {
-            return Negotiate.WithHeaders(CorsHeaders).WithModel(repo.Get(order));
+            Todo todo = repo.Get(parameters.id);
+            return Negotiate.WithHeaders(CorsHeaders).WithModel(todo);
         }
 
         private dynamic PostTodo(dynamic parameters)
         {
-            var todo = repo.Add(this.Bind<Todo>(), Context.Request.Url.HostName);
+            var todo = repo.Add(this.Bind<Todo>(), string.Format("{0}://{1}", Context.Request.Url.Scheme, Context.Request.Url.HostName));
             return Negotiate.WithModel(todo)
                 .WithStatusCode(HttpStatusCode.Created)
                 .WithHeaders(CorsHeaders);
