@@ -20,27 +20,27 @@ namespace todo_backend_nancy
 
             After += ctx => ctx.Response.WithHeaders(CorsHeaders);
 
-            Get["/"] = GetTodos;
+            Get["/todo-backend/"] = GetTodos;
 
-            Get["/todos"] = GetTodos;
+            Get["/todo-backend/todos"] = GetTodos;
 
-            Get["/todo/{id}"] = GetTodo;
+            Get["/todo-backend/todo/{id}"] = GetTodo;
 
-            Patch["/todo/{id}"] = UpdateTodo;
+            Patch["/todo-backend/todo/{id}"] = UpdateTodo;
 
-            Post["/"] = PostTodo;
+            Post["/todo-backend/"] = PostTodo;
 
-            Options["/"] = _ => Negotiate.WithHeaders(CorsHeaders);
+            Options["/todo-backend/"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
-            Options["/todos"] = _ => Negotiate.WithHeaders(CorsHeaders);
+            Options["/todo-backend/todos"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
-            Options["/todo/{id}"] = _ => Negotiate.WithHeaders(CorsHeaders);
+            Options["/todo-backend/todo/{id}"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
-            Delete["/"] = ClearTodos;
+            Delete["/todo-backend/"] = ClearTodos;
 
-            Delete["/todos"] = ClearTodos;
+            Delete["/todo-backend/todos"] = ClearTodos;
 
-            Delete["/todo/{id}"] = ClearTodo;
+            Delete["/todo-backend/todo/{id}"] = ClearTodo;
         }
 
         private dynamic ClearTodos(dynamic parameters)

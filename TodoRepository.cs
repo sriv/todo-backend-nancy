@@ -22,7 +22,7 @@ namespace todo_backend_nancy
             todo.Order = todo.Order > 0 ? todo.Order : nextOrder;
             todo.Id = nextId;
             todo.Completed = false;
-            todo.Url = string.Format("{0}/todo/{1}", BasePath, nextId);
+            todo.Url = string.Format("{0}/todo-backend/todo/{1}", BasePath, nextId);
 
             odb.Store<Todo>(todo);
             return todo;
