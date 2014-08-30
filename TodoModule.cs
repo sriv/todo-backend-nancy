@@ -18,6 +18,8 @@ namespace todo_backend_nancy
         {
             this.repo = repo;
 
+            After += ctx => ctx.Response.WithHeaders(CorsHeaders);
+
             Get["/"] = GetTodos;
 
             Get["/todos"] = GetTodos;
@@ -32,6 +34,8 @@ namespace todo_backend_nancy
 
             Options["/todos"] = _ => Negotiate.WithHeaders(CorsHeaders);
 
+            Options["/todo/{id}"] = _ => Negotiate.WithHeaders(CorsHeaders);
+
             Delete["/"] = ClearTodos;
 
             Delete["/todos"] = ClearTodos;
@@ -42,32 +46,30 @@ namespace todo_backend_nancy
         private dynamic ClearTodos(dynamic parameters)
         {
             repo.Clear();
-            return Negotiate.WithHeaders(CorsHeaders).WithStatusCode(HttpStatusCode.OK);
+            return Negotiate.WithStatusCode(HttpStatusCode.OK);
         }
 
         private dynamic ClearTodo(dynamic parameters)
         {
             repo.Delete(parameters.id);
-            return Negotiate.WithHeaders(CorsHeaders).WithStatusCode(HttpStatusCode.OK);
+            return Negotiate.WithStatusCode(HttpStatusCode.OK);
         }
 
         private dynamic GetTodos(dynamic parameters)
         {
-            return Negotiate.WithHeaders(CorsHeaders).WithModel(repo.All());
+            return Negotiate.WithModel(repo.All());
         }
 
         private dynamic GetTodo(dynamic parameters)
         {
             Todo todo = repo.Get(parameters.id);
-            return Negotiate.WithHeaders(CorsHeaders).WithModel(todo);
+            return Negotiate.WithModel(todo);
         }
 
         private dynamic PostTodo(dynamic parameters)
         {
             var todo = repo.Add(this.Bind<Todo>(), string.Format("{0}://{1}", Context.Request.Url.Scheme, Context.Request.Url.HostName));
-            return Negotiate.WithModel(todo)
-                .WithStatusCode(HttpStatusCode.Created)
-                .WithHeaders(CorsHeaders);
+            return Negotiate.WithModel(todo).WithStatusCode(HttpStatusCode.Created);
         }
 
         private dynamic UpdateTodo(dynamic parameters)
@@ -83,7 +85,7 @@ namespace todo_backend_nancy
                 todo.Completed = update.Completed.Value;
             repo.Update(todo);
             return Negotiate.WithModel(repo.Get(parameters.id) as Todo)
-                .WithStatusCode(HttpStatusCode.Created).WithHeaders(CorsHeaders);
+                .WithStatusCode(HttpStatusCode.Created);
         }
     }
 }
